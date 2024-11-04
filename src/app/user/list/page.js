@@ -20,16 +20,26 @@ export const tableColumns = [
 
 export default function UserList() {
 
-    const {pageNumber, setPageNumber} = useState(1);
-    const {pageSize, setPageSize} = useState(10);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const {getData, loading, data} = useListData(`user/get-page-list?pageNumber=${pageNumber-1}&pageSize=${pageSize}`);
 
     useEffect(() => {
-        getData();
-    }, []);
+        getData(`user/get-page-list?pageNumber=${pageNumber-1}&pageSize=${pageSize}`);
+    }, [pageSize, pageNumber]);
 
-    console.log(data);
+
+    const handlePageChange = async (page) => {
+        setPageNumber(page);
+    }
+
+    const handlePerRowsChange = async (newPerPage, page) => {
+        setPageNumber(page);
+        setPageSize(newPerPage);
+    }
+
+
     return (
         <>
             <DataTable data={data.users}
@@ -38,12 +48,13 @@ export default function UserList() {
                        noHeader={true}
                        pagination
                        paginationServer
+                       onChangePage={handlePageChange}
+                       onChangeRowsPerPage={handlePerRowsChange}
                        progressPending={loading}
                        paginationTotalRows={data.totalElements}
                        progressComponent={<Spinner color="danger">Loading...</Spinner>}
-                       paginationPerPage={10}
                        highlightOnHover
-            </>
+            />
         </>
     );
 }
