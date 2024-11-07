@@ -42,7 +42,7 @@ export default function UserList() {
 
     return (
         <>
-            <DataTable data={data.users}
+            {data != null && <DataTable data={data.users}
                        columns={tableColumns}
                        striped={true}
                        noHeader={true}
@@ -54,7 +54,7 @@ export default function UserList() {
                        paginationTotalRows={data.totalElements}
                        progressComponent={<Spinner color="danger">Loading...</Spinner>}
                        highlightOnHover
-            />
+            />}
         </>
     );
 }
